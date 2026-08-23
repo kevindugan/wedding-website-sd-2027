@@ -1,0 +1,18 @@
+{
+    "build": {"dockerfile": "Containerfile", "context": ".."},
+    "postCreateCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "hashicorp.terraform"
+            ],
+            "settings": {
+                "editor.rulers": [ 100 ]
+            }
+        }
+    },
+    "remoteUser": "gcloud-auth-user",
+    "runArgs": [
+        "--env-file", ".env"
+    ]
+}

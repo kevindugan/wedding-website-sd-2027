@@ -1,0 +1,19 @@
+FROM debian:bookworm
+
+RUN apt update && \
+    apt install -y git-lfs gnupg2 less vim jq wget curl software-properties-common \
+                   python3-numpy podman qemu-system && \
+    # Get Hashicorp Keyring
+    wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null && \
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list && \
+    # Get Google Keyring
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+    # Install terraform, gcloud
+    apt update && \
+    apt install -y terraform google-cloud-cli && \
+    # Create non-root user
+    useradd --shell /bin/bash --create-home gcloud-auth-user && \
+    echo "\nexport PATH=/home/gcloud-auth-user/.local/bin:\${PATH}" >> /home/gcloud-auth-user/.bashrc
+
+USER gcloud-auth-user
