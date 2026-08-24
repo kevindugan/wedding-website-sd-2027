@@ -20,9 +20,23 @@ gcloud billing projects list --billing-account=<billing-account-id>
 gcloud config set project <unique-project-id>
 ```
 
+Create an `.env` file to store the GCP project id created above
+
+```sh
+# .env
+TF_VAR_project_id=<unique-project-id>
+```
+
 ## Monitor the status of the cert
 
 ```sh
 gcloud compute ssl-certificates describe lb-managed-cert --global --format="get(name,managed.status)"
 gcloud compute ssl-certificates describe lb-managed-cert --global --format="get(managed.domainStatus)"
+```
+
+## Build Minified JS Wrapper
+
+```sh
+npm ci
+npx esbuild static-content/assets/js/dugan.js --bundle --minify --outfile=static-content/assets/js/dugan.min.js --platform=browser
 ```
