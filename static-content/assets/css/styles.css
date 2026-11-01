@@ -1,0 +1,350 @@
+:root {
+  --content-width: 70%;   /* content column */
+  --media-width: 30%;     /* image column */
+  --gap: clamp(1.25rem, 4vw, 3rem);           /* side padding, scales with viewport */
+  --pad-block: clamp(2.5rem, 8vw, 6rem);      /* top/bottom padding */
+  --sticky-top: 0px;      /* raise this if you add a fixed header */
+  --bg: #fafaf8;
+  --text: #1d1d1b;
+  --muted: #5c5c58;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+}
+
+/* ---------- Banner (first section): 50/50, image fades in on load ---------- */
+.banner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+.banner__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--pad-block) var(--gap);
+}
+
+.banner__content h1 {
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  line-height: 1.1;
+  margin: 0 0 1.5rem;
+}
+
+.banner__content p {
+  max-width: 50ch;
+  color: var(--muted);
+}
+
+/* Date + location subtitles; the --old one is struck through */
+.banner__content .banner__event {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  font-weight: 500;
+  color: var(--text);
+}
+
+.banner__content .banner__event--old {
+  margin-bottom: 1.5rem;
+  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.banner__media {
+  margin: 0;
+}
+
+.banner__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: fade-in 1.2s ease-out both;
+}
+
+/* ---------- Banner password + link button ---------- */
+[hidden] { display: none !important; }
+
+.unlock {
+  margin-top: 2rem;
+  max-width: 24rem;
+}
+
+.unlock__label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.unlock__row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.unlock__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.7rem 0.9rem;
+  font: inherit;
+  border: 1px solid #c9c8c2;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.unlock__input:focus {
+  outline: 2px solid var(--text);
+  outline-offset: 1px;
+}
+
+.unlock__submit,
+.unlock__link {
+  padding: 0.7rem 1.2rem;
+  font: inherit;
+  font-weight: 600;
+  color: var(--bg);
+  background: var(--text);
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.unlock__submit:hover,
+.unlock__link:hover {
+  opacity: 0.85;
+}
+
+.unlock .unlock__error {       /* extra class beats .banner__content p */
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: #b3261e;
+}
+
+.unlock__link {
+  display: inline-block;
+  align-self: flex-start;      /* don't stretch across the flex column */
+  margin-top: 2rem;
+  animation: fade-in 0.5s ease-out both;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---------- Section layout ---------- */
+.split {
+  display: grid;
+  grid-template-columns: var(--media-width) var(--content-width);
+  grid-template-areas: "media content";
+  align-items: start;          /* required so the sticky column can stick */
+  /* NOTE: don't put overflow:hidden on .split or any ancestor, or sticky stops working */
+}
+
+.split:nth-of-type(even) {
+  grid-template-columns: var(--content-width) var(--media-width);
+  grid-template-areas: "content media";
+}
+
+/* ---------- Sticky image ---------- */
+.split__media {
+  grid-area: media;
+  position: sticky;
+  top: var(--sticky-top);
+  height: calc(100vh - var(--sticky-top));
+  margin: 0;
+}
+
+.split__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Fade in on scroll: hidden only when JS is running; script.js adds .is-visible */
+.js .split__media img {
+  opacity: 0;
+  transition: opacity 0.9s ease-out;
+}
+
+.js .split__media.is-visible img {
+  opacity: 1;
+}
+
+/* ---------- Scrolling content ---------- */
+.split__content {
+  grid-area: content;
+  padding: var(--pad-block) var(--gap);
+}
+
+.split__content h2 {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1.2;
+  margin: 0 0 1.5rem;
+}
+
+.split__content p {
+  max-width: 65ch;
+  color: var(--muted);
+}
+
+.gallery {
+  grid-template-columns: 1fr;
+}
+
+/* ---------- Image gallery inside a section's content ---------- */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);  /* as many columns as fit */
+  gap: 1.25rem;
+  margin: 2rem 0;
+  max-width: 65ch;             /* line up with the paragraph width */
+}
+
+.gallery img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* ---------- Footer: email icon with mailto link ---------- */
+.site-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: var(--pad-block) var(--gap);
+  border-top: 1px solid #e2e1dc;
+  text-align: center;
+}
+
+.site-footer .eyebrow {
+  margin: 0;
+}
+
+.site-footer__email {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  color: var(--bg);
+  background: var(--text);
+  transition: opacity 0.2s ease-out;
+}
+
+.site-footer__email:hover {
+  opacity: 0.85;
+}
+
+.site-footer__email:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+.site-footer__address {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+  user-select: all;            /* one click selects the whole address for copying */
+}
+
+/* ---------- Tablet: narrower 60/40 split, still sticky ---------- */
+@media (max-width: 1024px) {
+  :root {
+    --content-width: 60%;
+    --media-width: 40%;
+  }
+}
+
+/* ---------- Mobile: single column, banner image, compact ---------- */
+@media (max-width: 640px) {
+  .banner {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .banner__media {
+    order: -1;                   /* image above the heading */
+    aspect-ratio: 4 / 3;
+    max-height: 50vh;
+  }
+
+  .banner__content {
+    padding: 2rem var(--gap) 2.5rem;
+  }
+
+  /* Anchor images to the top so cropping cuts off the bottom */
+  .banner__media img,
+  .split__media img {
+    object-position: center 30%;
+  }
+
+  .split,
+  .split:nth-of-type(even) {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "media"
+      "content";
+  }
+
+  .split__media {
+    position: static;            /* no sticky on small screens */
+    height: auto;
+    aspect-ratio: 16 / 9;
+    max-height: 35vh;
+    width: 100%;
+  }
+
+  .split__content {
+    padding: 1.5rem var(--gap) 2.5rem;
+    min-height: auto;
+  }
+
+  .split__content h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .split__content p {
+    font-size: 0.95rem;
+  }
+}
+
+/* ---------- Reduced motion: skip all fades ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .banner__media img,
+  .unlock__link {
+    animation: none;
+  }
+
+  .js .split__media img {
+    opacity: 1;
+    transition: none;
+  }
+}

@@ -28,6 +28,12 @@ resource "google_project_service" "compute" {
   disable_dependent_services = true
 }
 
+resource "google_project_service" "secrets" {
+  project                    = var.project_id
+  service                    = "secretmanager.googleapis.com"
+  disable_dependent_services = true
+}
+
 resource "random_id" "bucket_prefix" {
   byte_length = 8
 }
@@ -99,4 +105,8 @@ resource "google_compute_global_forwarding_rule" "default" {
   port_range            = "443"
   target                = google_compute_target_https_proxy.default.id
   ip_address            = google_compute_global_address.default.id
+}
+
+output "bucket_connection" {
+  value = "${google_storage_bucket.static_website.url}"
 }

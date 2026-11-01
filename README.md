@@ -40,3 +40,30 @@ gcloud compute ssl-certificates describe lb-managed-cert --global --format="get(
 npm ci
 npx esbuild static-content/assets/js/dugan.js --bundle --minify --outfile=static-content/assets/js/dugan.min.js --platform=browser
 ```
+
+# Upload content to website
+
+```sh
+gcloud storage cp --recursive static-content $(terraform -chdir=tf output --raw bucket_connection)
+```
+
+# Start local server
+
+```sh
+python3 -m http.server -d static-content --cgi
+```
+
+# Create secret in gcloud
+
+```sh
+# Create
+gcloud secrets create WEBSITE_RSVP_PHRASE --data-file=secret_file.txt --project=<project_name>
+
+# Update
+gcloud secrets versions add WEBSITE_RSVP_PHRASE --data-file=secret_file.txt --project=<project_name>
+
+# Get
+gcloud secrets versions access latest --secret=WEBSITE_RSVP_PHRASE --project=<project_name>
+```
+
+Email alias is managed through https://app.simplelogin.io/ using Proton login
