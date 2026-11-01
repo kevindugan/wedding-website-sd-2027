@@ -30,7 +30,9 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: var(--pad-block) var(--gap);
+  padding-block: var(--pad-block);
+  /* Center a 50ch-wide block in the column (matches the intro text width) */
+  padding-inline: max(var(--gap), calc((100% - 50ch) / 2));
 }
 
 .banner__content h1 {
@@ -185,7 +187,9 @@ body {
 /* ---------- Scrolling content ---------- */
 .split__content {
   grid-area: content;
-  padding: var(--pad-block) var(--gap);
+  padding-block: var(--pad-block);
+  /* Center a 65ch-wide block in the column; never less than the normal side gap */
+  padding-inline: max(var(--gap), calc((100% - 65ch) / 2));
 }
 
 .split__content h2 {
@@ -199,14 +203,10 @@ body {
   color: var(--muted);
 }
 
-.gallery {
-  grid-template-columns: 1fr;
-}
-
 /* ---------- Image gallery inside a section's content ---------- */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);  /* as many columns as fit */
+  grid-template-columns: repeat(2, 1fr);   /* 2 columns; 1 column on mobile (see below) */
   gap: 1.25rem;
   margin: 2rem 0;
   max-width: 65ch;             /* line up with the paragraph width */
@@ -333,6 +333,10 @@ body {
 
   .split__content p {
     font-size: 0.95rem;
+  }
+
+  .gallery {
+    grid-template-columns: 1fr;
   }
 }
 
