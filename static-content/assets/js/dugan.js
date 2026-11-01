@@ -32,4 +32,14 @@ import bcrypt from "bcryptjs"
   input.addEventListener("input", () => {
     error.hidden = true;
   });
+
+  // Show/hide what's been typed in the password field.
+  const toggle = document.getElementById("unlock-toggle");
+  toggle.addEventListener("click", () => {
+    const showing = input.type === "text";
+    input.type = showing ? "password" : "text";
+    toggle.setAttribute("aria-pressed", String(!showing));
+    toggle.setAttribute("aria-label", showing ? "Show password" : "Hide password");
+    input.focus();
+  });
 })();

@@ -44,7 +44,7 @@ npx esbuild static-content/assets/js/dugan.js --bundle --minify --outfile=static
 # Upload content to website
 
 ```sh
-gcloud storage cp --recursive static-content/* $(terraform -chdir=tf output --raw bucket_connection)
+gcloud storage rsync --recursive static-content/ $(terraform -chdir=tf output --raw bucket_connection)/ --checksums-only
 ```
 
 # Start local server

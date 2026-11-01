@@ -27,7 +27,26 @@
       <form class="unlock" id="unlock-form" novalidate>
         <label class="unlock__label" for="unlock-password">Password</label>
         <div class="unlock__row">
-          <input class="unlock__input" type="password" id="unlock-password" autocomplete="off" />
+          <!-- <input class="unlock__input" type="password" id="unlock-password" autocomplete="off" /> -->
+          <div class="unlock__field">
+            <input class="unlock__input" type="password" id="unlock-password" autocomplete="off" />
+            <button class="unlock__toggle" id="unlock-toggle" type="button"
+                    aria-controls="unlock-password" aria-pressed="false" aria-label="Show password">
+              <!-- Eye: shown while the password is hidden -->
+              <svg class="unlock__icon-show" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                   stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              <!-- Eye with slash: shown while the password is visible -->
+              <svg class="unlock__icon-hide" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                   stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
+                <circle cx="12" cy="12" r="3" />
+                <path d="M4 20L20 4" />
+              </svg>
+            </button>
+          </div>
           <button class="unlock__submit" type="submit">Unlock</button>
         </div>
         <p class="unlock__error" id="unlock-error" role="alert" hidden>Incorrect password. Try again.</p>

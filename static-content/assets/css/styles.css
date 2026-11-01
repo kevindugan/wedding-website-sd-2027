@@ -93,19 +93,72 @@ body {
   gap: 0.5rem;
 }
 
-.unlock__input {
+/* Wraps the input so the show/hide button can sit inside its right edge */
+.unlock__field {
+  position: relative;
   flex: 1;
   min-width: 0;
-  padding: 0.7rem 0.9rem;
+}
+
+.unlock__input {
+  width: 100%;
+  padding: 0.7rem 2.9rem 0.7rem 0.9rem;   /* right padding leaves room for the toggle */
   font: inherit;
   border: 1px solid #c9c8c2;
   border-radius: 6px;
   background: #fff;
 }
 
+/* Hide Edge's built-in reveal button so there aren't two eyes */
+.unlock__input::-ms-reveal {
+  display: none;
+}
+
 .unlock__input:focus {
   outline: 2px solid var(--text);
   outline-offset: 1px;
+}
+
+/* Show/hide password toggle */
+.unlock__toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.35rem;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.unlock__toggle:hover {
+  color: var(--text);
+}
+
+.unlock__toggle:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 0;
+}
+
+.unlock__icon-hide,
+.unlock__toggle[aria-pressed="true"] .unlock__icon-show {
+  display: none;
+}
+
+.unlock__toggle[aria-pressed="true"] .unlock__icon-hide {
+  display: block;
+}
+
+/* The toggle needs JS to work, so hide it when JS isn't running */
+html:not(.js) .unlock__toggle {
+  display: none;
 }
 
 .unlock__submit,
@@ -190,6 +243,7 @@ body {
   padding-block: var(--pad-block);
   /* Center a 65ch-wide block in the column; never less than the normal side gap */
   padding-inline: max(var(--gap), calc((100% - 65ch) / 2));
+  min-height: 150vh;           /* demo only: makes sure there's enough to scroll past */
 }
 
 .split__content h2 {
