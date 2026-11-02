@@ -161,8 +161,10 @@ html:not(.js) .unlock__toggle {
   display: none;
 }
 
+/* Dark button style, shared by the banner and the general .button link */
 .unlock__submit,
-.unlock__link {
+.unlock__link,
+.button {
   padding: 0.7rem 1.2rem;
   font: inherit;
   font-weight: 600;
@@ -175,8 +177,22 @@ html:not(.js) .unlock__toggle {
 }
 
 .unlock__submit:hover,
-.unlock__link:hover {
+.unlock__link:hover,
+.button:hover {
   opacity: 0.85;
+}
+
+/* Link button for section content, e.g. to an external site; centered on its own line */
+.button {
+  display: block;
+  width: fit-content;
+  margin: 1.5rem auto;
+  text-align: center;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
 }
 
 .unlock .unlock__error {       /* extra class beats .banner__content p */
@@ -255,6 +271,149 @@ html:not(.js) .unlock__toggle {
 .split__content p {
   max-width: 65ch;
   color: var(--muted);
+}
+
+/* Bulleted lists match paragraphs: same width, colour and spacing */
+.split__content ul {
+  max-width: 65ch;
+  margin: 1em 0;
+  padding-left: 1.25rem;
+  color: var(--muted);
+}
+
+.split__content ul li + li {
+  margin-top: 0.4rem;
+}
+
+/* ---------- Centered section heading ----------
+   Add to an <h2>, an .eyebrow, or a wrapper around both. */
+.split__heading-center {
+  text-align: center;
+}
+
+.split__heading-center,
+.split__heading-center > * {
+  margin-inline: auto;
+}
+
+/* ---------- Schedule: centered list of events inside a section ----------
+   <ol class="schedule"> with one <li class="schedule__event"> per event:
+   date, short rule (drawn by CSS), title, location, address, description.
+   ".schedule .x" selectors are used so they beat ".split__content p". */
+.schedule {
+  display: grid;
+  gap: clamp(2rem, 5vw, 3rem);
+  max-width: 65ch;             /* same width as the section's paragraphs */
+  margin: 2.5rem auto;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+}
+
+.schedule .schedule__date {
+  max-width: none;
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* The horizontal line between the date and the title; 80% of the text width, centered */
+.schedule__date::after {
+  content: "";
+  display: block;
+  width: 80%;
+  height: 1px;
+  margin: 0.9rem auto 1rem;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.schedule__title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.25rem, 2.2vw, 1.5rem);
+  line-height: 1.25;
+}
+
+.schedule .schedule__location {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.schedule .schedule__address {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* Address as a map link, with a pin icon in front */
+.schedule__map {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.schedule__map svg {
+  flex-shrink: 0;
+}
+
+/* Same map link, for use inside a paragraph: flows inline with the text */
+.map-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.map-link svg {
+  vertical-align: -0.15em;     /* sit the pin on the text baseline */
+  margin-right: 0.2em;
+}
+
+.schedule__map:hover,
+.map-link:hover {
+  color: var(--text);
+}
+
+.schedule__map:focus-visible,
+.map-link:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Text for screen readers only */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Repeat for multiple paragraphs; space below each except the last */
+.schedule .schedule__description {
+  max-width: 50ch;
+  margin: 0 auto 1rem;
+  color: var(--muted);
+  font-style: italic;
+  text-align: justify;
+  hyphens: auto;               /* fewer wide gaps between justified words */
+}
+
+.schedule .schedule__description:last-child {
+  margin-bottom: 0;
 }
 
 /* ---------- Image gallery inside a section's content ---------- */
@@ -385,7 +544,8 @@ html:not(.js) .unlock__toggle {
     margin-bottom: 1rem;
   }
 
-  .split__content p {
+  .split__content p,
+  .split__content ul {
     font-size: 0.95rem;
   }
 
