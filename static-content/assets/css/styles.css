@@ -291,6 +291,41 @@ html:not(.js) .unlock__toggle {
   margin-top: 0.4rem;
 }
 
+/* ---------- Hover captions from image alt text (added by script.js) ---------- */
+.banner__media,
+.gallery__item {
+  position: relative;          /* .split__media is already positioned (sticky) */
+}
+
+.gallery__item {
+  display: block;
+}
+
+.hover-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 2.5rem 1rem 0.9rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #fff;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.65));
+  opacity: 0;
+  transition: opacity 0.25s ease-out;
+  pointer-events: none;
+}
+
+.has-caption:hover .hover-caption {
+  opacity: 1;
+}
+
+.gallery__item .hover-caption {
+  padding: 1.5rem 0.75rem 0.6rem;
+  font-size: 0.8rem;
+  border-radius: 0 0 10px 10px;   /* match the gallery image corners */
+}
+
 /* ---------- Centered section heading ----------
    Add to an <h2>, an .eyebrow, or a wrapper around both. */
 .split__heading-center {
@@ -533,7 +568,7 @@ html:not(.js) .unlock__toggle {
   }
 
   .split__media {
-    position: static;            /* no sticky on small screens */
+    position: relative;          /* no sticky on small screens; still holds the hover caption */
     height: auto;
     aspect-ratio: 16 / 9;
     max-height: 35vh;
@@ -567,8 +602,12 @@ html:not(.js) .unlock__toggle {
     animation: none;
   }
 
+  .js .split__media img,
+  .hover-caption {
+    transition: none;
+  }
+
   .js .split__media img {
     opacity: 1;
-    transition: none;
   }
 }
