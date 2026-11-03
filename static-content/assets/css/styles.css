@@ -195,6 +195,12 @@ html:not(.js) .unlock__toggle {
   outline-offset: 3px;
 }
 
+/* Locked until the banner password is entered (set by script.js) */
+.button[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .unlock .unlock__error {       /* extra class beats .banner__content p */
   margin: 0.5rem 0 0;
   font-size: 0.85rem;
