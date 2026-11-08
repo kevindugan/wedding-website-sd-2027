@@ -4,6 +4,7 @@
   --gap: clamp(1.25rem, 4vw, 3rem);           /* side padding, scales with viewport */
   --pad-block: clamp(2.5rem, 8vw, 6rem);      /* top/bottom padding */
   --sticky-top: 0px;      /* raise this if you add a fixed header */
+  --peek: 12vh;           /* how much of the next section shows below the banner on load */
   --bg: #fafaf8;
   --text: #1d1d1b;
   --muted: #5c5c58;
@@ -23,7 +24,7 @@ body {
 .banner {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  min-height: 100vh;
+  min-height: calc(100vh - var(--peek));
 }
 
 .banner__content {
@@ -195,10 +196,60 @@ html:not(.js) .unlock__toggle {
   outline-offset: 3px;
 }
 
-/* Locked until the banner password is entered (set by script.js) */
+/* Locked until the banner password is entered (set by script.js).
+   Dimmed by colour, not opacity, so the tooltip stays full strength. */
 .button[aria-disabled="true"] {
-  opacity: 0.4;
+  background: #a5a5a2;
   cursor: not-allowed;
+}
+
+.button[aria-disabled="true"]:hover {
+  opacity: 1;
+}
+
+/* Hover tooltip on a locked button; shows immediately (a title tooltip has a delay) */
+.button[data-tooltip] {
+  position: relative;
+}
+
+.button[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 16rem;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--bg);
+  background: var(--text);
+  border-radius: 4px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.button[data-tooltip]:hover::after {
+  opacity: 1;
+}
+
+/* Note below a locked button on how to unlock it (added by script.js).
+   ".button + .button__note" beats ".split__content p" and ".banner__content p". */
+.button + .button__note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  max-width: none;
+  margin: -0.75rem auto 1.5rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.button__note svg {
+  flex-shrink: 0;
 }
 
 .unlock .unlock__error {       /* extra class beats .banner__content p */
@@ -217,6 +268,55 @@ html:not(.js) .unlock__toggle {
 @keyframes fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* ---------- Scroll cue: arrow pinned to the bottom of the screen ----------
+   Shown by script.js only when none of the next section peeks below the banner. */
+.scroll-cue {
+  position: fixed;
+  left: calc(50% - 1.375rem);   /* centered: half the width */
+  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));   /* clear the iPhone home bar */
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  color: var(--bg);
+  background: var(--text);
+  border: 0;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  animation:
+    fade-in 0.5s ease-out,
+    scroll-cue-bounce 2s ease-in-out 0.5s infinite;
+}
+
+.scroll-cue:hover {
+  opacity: 0.85;
+}
+
+.scroll-cue:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 3px;
+}
+
+/* Set by script.js once the next section is on screen */
+.scroll-cue.is-leaving {
+  animation: fade-out 0.3s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes scroll-cue-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(6px); }
 }
 
 /* ---------- Section layout ---------- */
@@ -256,6 +356,16 @@ html:not(.js) .unlock__toggle {
 }
 
 .js .split__media.is-visible img {
+  opacity: 1;
+}
+
+/* The first section's image shows in the banner's peek, so skip its fade-in */
+.js .split:first-of-type .split__media img {
+  opacity: 0.5;
+  transition: opacity 0.9s ease-out;
+}
+
+.js .split:first-of-type .split__media.is-visible img {
   opacity: 1;
 }
 
@@ -598,7 +708,9 @@ html:not(.js) .unlock__toggle {
 /* ---------- Reduced motion: skip all fades ---------- */
 @media (prefers-reduced-motion: reduce) {
   .banner__media img,
-  .unlock__link {
+  .unlock__link,
+  .scroll-cue,
+  .scroll-cue.is-leaving {
     animation: none;
   }
 
